@@ -99,7 +99,7 @@ public class BoatForces : IYachtControls
         //rotateToOptimalSailAngle(headSail, apparentWind, headSailAreaM2);
         //rotateToOptimalSailAngle(mainSail, apparentWind, mainSailAreaM2);
 
-        addSailForce(headSail, apparentWind, headSailAreaM2);
+        //addSailForce(headSail, apparentWind, headSailAreaM2);
         addSailForce(mainSail, apparentWind, mainSailAreaM2);
 
         yachtRigidbody.AddForce(-getVelocity().normalized * calcualteFrictionalForce());
