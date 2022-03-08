@@ -19,12 +19,12 @@ public class YachtsManager : MonoBehaviour
     private int minimalDistance = 5;
     
     void Start() {
-        secondYacht = cloneBoat(yachtPrefab, "SecondYacht");
+        //secondYacht = cloneBoat(yachtPrefab, "SecondYacht");
     }
 
     void Update() {
 
-        followTarget();
+        //followTarget();
         
         if (Input.GetKey(KeyCode.A)){
             yachtControls.rotateRudder(1);
@@ -80,7 +80,7 @@ public class YachtsManager : MonoBehaviour
             yachtControls.rotateRudder(1);
         } else if(angle < -10){
             yachtControls.rotateRudder(-1);
-        }        
+        }
     }
 
     private int calcAngleToWaypoint() { 

@@ -75,7 +75,7 @@ public class BoatForces : IYachtControls
         }
     }
 
-    Vector3 getApparentWindVector() {
+    public override Vector3 getApparentWindVector() {
 
         Vector3 windSpeedVector = windObj.transform.forward * windSpeed;
         Vector3 boatSpeedVector = getVelocity();
@@ -96,8 +96,8 @@ public class BoatForces : IYachtControls
         Vector3 apparentWind = getApparentWindVector();
         hudMenu.onAwaAngleChange(apparentWind);
 
-        rotateToOptimalSailAngle(headSail, apparentWind, headSailAreaM2);
-        rotateToOptimalSailAngle(mainSail, apparentWind, mainSailAreaM2);
+        //rotateToOptimalSailAngle(headSail, apparentWind, headSailAreaM2);
+        //rotateToOptimalSailAngle(mainSail, apparentWind, mainSailAreaM2);
 
         addSailForce(headSail, apparentWind, headSailAreaM2);
         addSailForce(mainSail, apparentWind, mainSailAreaM2);
@@ -116,10 +116,10 @@ public class BoatForces : IYachtControls
 
         if(angle < 0 && Mathf.Abs(minLimit) < Mathf.Abs(maxSailAngle)){
             minLimit += angle;
-            maxLimit = minLimit + 30;
+            maxLimit = minLimit + 1;
         } else if (angle >= 0 && Mathf.Abs(maxLimit) < Mathf.Abs(maxSailAngle)) {
             maxLimit += angle;
-            minLimit = maxLimit - 30;
+            minLimit = maxLimit - 1;
         }
         setSailJointLimits(sail, minLimit, maxLimit);
     }
@@ -159,10 +159,11 @@ public class BoatForces : IYachtControls
         
         Rigidbody sailRb = sail.GetComponent<Rigidbody>();       
         sailRb.AddForce(resultForce);
-        //Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, liftForce / 10, Color.blue, 0.0f, false);
-        //Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, -apparentWind, Color.yellow, 0.0f, false);
+        Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, liftForce / 10, Color.blue, 0.0f, false);
+        //Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, -apparentWind, Color.cyan, 0.0f, false);
         //Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, sailVector*10, Color.yellow, 0.0f, false);
-        //Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, dragForce / 10, Color.red, 0.0f, false);
+        Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, dragForce / 10, Color.red, 0.0f, false);
+        Debug.DrawRay(sail.transform.position + sailRb.centerOfMass, resultForce / 10, Color.yellow, 0.0f, false);
     }
 
     void rotateToOptimalSailAngle(GameObject sail, Vector3 apparentWind, float sailAreaM2){
@@ -223,7 +224,9 @@ public class BoatForces : IYachtControls
         float rightAngle = -90 * Mathf.Sign(sideSpeed);
         Vector3 liftUnderwaterDirection = rotateVectorByDegree(getVelocity(), rightAngle);
         float antiDargCoeficient = 2f; //TODO
-        keelRigidbody.AddForce(liftUnderwaterDirection * sideSpeed * sideSpeed * waterRho * antiDargCoeficient);
+        Vector3 keelForce = liftUnderwaterDirection * sideSpeed * sideSpeed * waterRho * antiDargCoeficient;
+        keelRigidbody.AddForce(keelForce);
+        Debug.DrawRay(yachtRigidbody.transform.position + yachtRigidbody.centerOfMass, keelForce / 10, Color.blue, 0.0f, false);
     }
 
     // TODO Hull has significant anti drag effect. But I don't have formaula for it yet.
@@ -231,7 +234,9 @@ public class BoatForces : IYachtControls
     void addHullDragForce() {
         float sideSpeed = Vector3.Dot(getVelocity(), transform.right);
         float dargCoeficient = 0.25f; //TODO
-        yachtRigidbody.AddForce(-getVelocity().normalized * sideSpeed * sideSpeed * waterRho * dargCoeficient);
+        Vector3 hullForce = -getVelocity().normalized * sideSpeed * sideSpeed * waterRho * dargCoeficient;
+        yachtRigidbody.AddForce(hullForce);
+        //Debug.DrawRay(yachtRigidbody.transform.position + yachtRigidbody.centerOfMass, hullForce, Color.cyan, 0.0f, false);
     }
 
     float calcualteFrictionalForce() {
