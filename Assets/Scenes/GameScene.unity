@@ -7811,6 +7811,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.x
       value: -0.099999994
       objectReference: {fileID: 0}
+    - target: {fileID: 4918902270632849580, guid: 014f259172e73a44287ca8f19ad5717f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4918902271680101185, guid: 014f259172e73a44287ca8f19ad5717f,
         type: 3}
       propertyPath: hudMenu

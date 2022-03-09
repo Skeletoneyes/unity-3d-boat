@@ -30,6 +30,11 @@ public class YachtsManager : MonoBehaviour
             yachtControls.rotateRudder(1);
         }
 
+        if (Input.GetKey(KeyCode.S))
+        {
+            yachtControls.resetRudder();
+        }
+
         if (Input.GetKey(KeyCode.D)) {
             yachtControls.rotateRudder(-1);
         }

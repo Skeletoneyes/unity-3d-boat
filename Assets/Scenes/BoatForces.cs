@@ -67,12 +67,20 @@ public class BoatForces : IYachtControls
         return yachtRigidbody.velocity;
     }
 
-    public override void rotateRudder(int angle){
-        if(angle > 0){
-            yachtRigidbody.AddForceAtPosition(transform.right * 1000 * getVelocity().magnitude, rudder.transform.position, ForceMode.Force);
-        } else if (angle < 0) {
-            yachtRigidbody.AddForceAtPosition(transform.right * -1000 * getVelocity().magnitude, rudder.transform.position, ForceMode.Force);
-        }
+    public override void rotateRudder(int angle)
+    {
+        rudder.transform.Rotate(new Vector3(0, angle, 0));
+    }
+
+    public override void resetRudder()
+    {
+        rudder.transform.localRotation = Quaternion.identity;
+    }
+void addRudderForce ()
+    {
+        Vector3 rudderForce = transform.right * 1000 * rudder.transform.rotation.y * Time.fixedDeltaTime * getVelocity().magnitude;
+        yachtRigidbody.AddForceAtPosition( rudderForce, rudder.transform.position, ForceMode.Force);
+        Debug.DrawRay(transform.position + rudder.transform.position, rudderForce * 1000, Color.magenta, 0.0f, false);
     }
 
     public override Vector3 getApparentWindVector() {
@@ -101,6 +109,7 @@ public class BoatForces : IYachtControls
 
         //addSailForce(headSail, apparentWind, headSailAreaM2);
         addSailForce(mainSail, apparentWind, mainSailAreaM2);
+        addRudderForce();
 
         yachtRigidbody.AddForce(-getVelocity().normalized * calcualteFrictionalForce());
         yachtRigidbody.AddForce(-getVelocity().normalized * calculateResidualForce());
